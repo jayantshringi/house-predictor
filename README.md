@@ -37,6 +37,7 @@ house-predictor/
 │   ├── __init__.py
 │   ├── test_api.py                  # Flask API test suite
 │   └── test_model.py                # ML pipeline test suite
+├── app.py                           # Streamlit deployment entry point (delegates to src/streamlit_app.py)
 ├── Dockerfile                       # Multi-stage production container
 ├── requirements.txt                 # Complete project dependencies
 └── README.md                        # Documentation
