@@ -17,12 +17,18 @@ This repository contains a production-ready end-to-end Machine Learning pipeline
 ```
 house-predictor/
 ├── data/
-│   └── housing.csv                   # Dataset (auto-generated or custom)
+│   ├── housing.csv                   # Production dataset (auto-generated)
+│   └── housing_data.csv              # Exploratory dataset (auto-generated)
+├── models/
+│   ├── model.pkl                     # Streamlit model artifact
+│   └── production_artifacts.pkl      # Flask model & scaler artifacts (after training)
 ├── notebooks/
-│   └── eda.ipynb                    # Assumptions verification notebook
+│   ├── eda.ipynb                    # Assumptions verification notebook
+│   └── model_building.ipynb          # Exploratory model building notebook
 ├── src/
 │   ├── __init__.py
-│   ├── app.py                       # Flask Microservice
+│   ├── app.py                       # Flask Microservice (Inference API)
+│   ├── streamlit_app.py             # Streamlit Interactive Web Application
 │   ├── data_prep.py                 # Data validation & outlier removal
 │   ├── generate_data.py             # Synthetic data generator helper
 │   ├── train.py                     # ML pipeline training & export script
@@ -60,13 +66,18 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-### 3. Generate Data & Train Model
-To generate synthetic data (includes outliers) and train the multiple linear regression model:
+### 3. Generate Data & Train Models
+
+#### For the Flask API Pipeline (Production):
+Generate synthetic data and train the production pipeline model:
 ```bash
 python src/generate_data.py
 python src/train.py
 ```
-This produces `data/housing.csv` and serializes the model artifacts to `models/production_artifacts.pkl`.
+This saves `data/housing.csv` and trains the model artifacts to `models/production_artifacts.pkl`.
+
+#### For the Streamlit Web Application (Exploratory):
+Open and run all cells in `notebooks/model_building.ipynb`. This will generate `data/housing_data.csv` and train `models/model.pkl`.
 
 ---
 
@@ -79,16 +90,23 @@ Follow the steps in the notebook to view Linearity, VIF calculations (multicolli
 
 ---
 
-## Running the API Microservice
+## Running the Applications
 
-### Locally (Development Server)
+### 1. Interactive Streamlit Web Application
+To start the user-friendly Streamlit web interface:
+```bash
+streamlit run src/streamlit_app.py
+```
+The app will run locally and open automatically in your browser (usually at `http://localhost:8501`).
+
+### 2. Flask API Microservice (Production)
 Run the development Flask server:
 ```bash
 python src/app.py
 ```
 The service will start on `http://localhost:5000`.
 
-### Local Inference Request (cURL)
+### Local Inference Request to Flask API (cURL)
 ```bash
 curl -X POST http://127.0.0.1:5000/predict \
      -H "Content-Type: application/json" \

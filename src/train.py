@@ -39,7 +39,11 @@ def run_training_pipeline():
     # 5. Evaluate Performance
     predictions = model.predict(X_test_scaled)
     r2 = r2_score(y_test, predictions)
-    rmse = mean_squared_error(y_test, predictions, squared=False)
+    try:
+        from sklearn.metrics import root_mean_squared_error
+        rmse = root_mean_squared_error(y_test, predictions)
+    except ImportError:
+        rmse = mean_squared_error(y_test, predictions, squared=False)
     
     print(f"--- Training Complete --- \n R2 Score: {r2:.4f} \n RMSE: ${rmse:,.2f}")
     

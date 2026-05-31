@@ -1,9 +1,17 @@
+import os
 import streamlit as st
 import joblib
 import pandas as pd
 
+# Resolve the path to models/model.pkl relative to this file's directory
+MODEL_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), '../models/model.pkl'))
+
+if not os.path.exists(MODEL_PATH):
+    st.error(f"Model file not found at '{MODEL_PATH}'. Please train the model first by running the model building notebook or pipeline.")
+    st.stop()
+
 # Load the saved model
-model = joblib.load('model.pkl')
+model = joblib.load(MODEL_PATH)
 
 # Build the Web App UI
 st.title("House Price Predictor 🏠")
